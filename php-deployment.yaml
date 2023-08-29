@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: php-fpm
+spec:
+  type: ClusterIP
+  selector:
+    name: php-fpm
+    app: wordpress
+  ports:
+  - port: 9000
+    targetPort: 9000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php-fpm
+  labels:
+    name: php-fpm
+    app: wordpress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: php-fpm
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        name: php-fpm
+        app: wordpress
+    spec:
+      containers:
+      - name: php-fpm
+        image: kem0sabe/php-wordpress
+        ports:
+        - containerPort: 9000
+        env:
+        - name: WORDPRESS_DB_HOST
+          value: wordpress-mysql 
+        - name: WORDPRESS_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql
+              key: password
