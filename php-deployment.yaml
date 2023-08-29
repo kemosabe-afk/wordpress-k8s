@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
       - name: php-fpm
-        image: kem0sabe/php-wordpress
+        image: kem0sabe/php-wordpress:v2
         ports:
         - containerPort: 9000
         env:
