@@ -19,7 +19,7 @@ metadata:
     name: php-fpm
     app: wordpress
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       name: php-fpm
