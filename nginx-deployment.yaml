@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  type: NodePort
+  selector:
+    name: nginx
+    app: wordpress
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    name: nginx
+    app: wordpress
+spec:
+  replicas: 3 
+  selector:
+    matchLabels:
+      name: nginx
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        name: nginx
+        app: wordpress
+    spec:
+      containers:
+      - name: nginx
+        image: kem0sabe/nginx-wordpress
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
